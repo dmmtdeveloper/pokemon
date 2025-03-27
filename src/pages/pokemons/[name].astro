@@ -1,0 +1,134 @@
+---
+import type { GetStaticPaths } from "astro";
+import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
+import { Icon } from "astro-icon/components";
+
+import Layout from "@layouts/Layout.astro";
+import PokemonCard from "@components/pokemons/PokemonCard.astro";
+
+import "@styles/global.css";
+import Title from "@components/shared/Title.astro";
+
+export const getStaticPaths = (async () => {
+  const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  const { results } = (await resp.json()) as PokemonListResponse;
+
+  return results.map(({ name, url }) => ({
+    params: { name: name },
+    props: { name: name, url: url },
+  }));
+}) satisfies GetStaticPaths;
+
+const { name } = Astro.params;
+const { url } = Astro.props;
+
+const id = url.split("/").at(-2);
+const audioSource = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
+const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+---
+
+<Layout
+  title={`Pokémon - #${id} ${name}`}
+  description={`Información de ${name}`}
+  image={imageUrl}
+>
+  <button
+    onclick="history.back()"
+    class="text-sky-400 px-8 py-2 rounded-2xl cursor-pointer "
+    >Regresar</button
+  >
+  <section class="mt-10 flex flex-col justify-center items-center">
+    <div class="flex flex-row items-center">
+      <Title title={name} />
+
+      <!-- heart -->
+      <button
+        id="btn-favorite"
+        class="ml-4 hover:animate-pulse cursor-pointer"
+        data-name={name}
+        data-id={id}
+      >
+        <Icon
+          data-outline
+          title="heart-outline"
+          name="heart-outline"
+          size={40}
+          class="text-red-500 heart-outline"
+        />
+        <Icon
+          data-full
+          title="heart-full"
+          name="heart-full"
+          size={40}
+          class="text-red-500 hidden"
+        />
+      </button>
+    </div>
+
+    <PokemonCard name={name} url={url} isBig={true} />
+    <audio controls class="mt-5">
+      <source src={audioSource} type="audio/ogg" />
+      Your browser does not support the audio element.
+    </audio>
+  </section>
+</Layout>
+
+<script>
+  import type { FavoritePokemon } from "@interfaces/favorite-pokemons";
+
+  const handlePageLoad = () => {
+    let favoritePokemons: FavoritePokemon[] = JSON.parse(
+      localStorage.getItem("favorites") ?? "[]"
+    );
+
+    const btnFavorite = document.getElementById(
+      "btn-favorite"
+    ) as HTMLButtonElement;
+    if (!btnFavorite) return;
+
+    const name = btnFavorite.dataset.name ?? "";
+    const id = btnFavorite.dataset.id ?? "";
+    const isFavorite = favoritePokemons.some((fav) => fav.name === name);
+
+    //captura de 2 buttons
+    const heartOutline = btnFavorite.querySelector(
+      "[data-outline]"
+    ) as HTMLElement;
+    const heartFull = btnFavorite.querySelector("[data-full]") as HTMLElement;
+
+    // mantener el like aunque me cambie de pantalla
+    if (isFavorite) {
+      heartOutline.classList.add("hidden");
+      heartFull.classList.remove("hidden");
+    }
+
+    //funcion para agregar y remover pokemones
+    const toogleFavorite = () => {
+      const isFavorite = favoritePokemons.some((fav) => fav.name === name);
+      if (isFavorite) {
+        //remover
+        favoritePokemons = favoritePokemons.filter((fav) => fav.name !== name);
+      } else {
+        //agregar
+        favoritePokemons.push({
+          id: +id, // transforma a numero
+          name: name,
+        });
+      }
+
+      //guardar en localStorage
+      localStorage.setItem("favorites", JSON.stringify(favoritePokemons));
+    };
+
+    btnFavorite.addEventListener("click", () => {
+      //evento click cambiar corazón outline to fill y viceversa
+      heartOutline.classList.toggle("hidden");
+      heartFull.classList.toggle("hidden");
+      //guarda en localStorage
+      toogleFavorite();
+    });
+  };
+  document.addEventListener("astro:page-load", () => {
+    handlePageLoad();
+  });
+</script>
