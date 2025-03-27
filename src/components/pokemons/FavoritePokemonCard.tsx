@@ -17,14 +17,19 @@ export const FavoritePokemonCard: Component<Props> = ({ pokemon }) => {
     const newFavorites = favorites.filter((p) => p.id !== pokemon.id);
 
     localStorage.setItem("favorites", JSON.stringify(newFavorites));
-    setIsVisible(false)
+    setIsVisible(false);
   };
 
   return (
     <Show when={isVisible()}>
       <div class="flex flex-col justify-center items-center pt-10">
         <a href={`/pokemons/${pokemon.name}`}>
-          <img src={imageUrl} alt={pokemon.name} width={100} />
+          <img
+            src={imageUrl}
+            alt={pokemon.name}
+            width={100}
+            style={`view-transition-name: ${pokemon.name}-image`}
+          />
           <p class="capitaliza">
             #{pokemon.id} {pokemon.name}
           </p>

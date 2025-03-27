@@ -3,23 +3,23 @@ const links = [
   { name: "listado", href: "/" },
   { name: "páginado", href: "/pokemons/1" },
   { name: "favoritos", href: "/favorites" },
-  { name: "islands", href: "/islands" },
+  // { name: "islands", href: "/islands" },
 ];
 
 const currentPath = Astro.url.pathname;
 ---
 
 <!-- component -->
-<nav class="fixed top-0 w-full shadow bg-slate-900">
+<nav class="fixed top-0 w-full shadow bg-slate-900 z-10">
   <div
-    class=" sticky container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300"
+    class=" sticky container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300 "
   >
     {
       links.map(({ name, href }) => (
         <div>
           <a
             href={href}
-            class="mx-1.5 sm:mx-6 text-gray-800 dark:text-gray-300"
+            class="mx-1.5 sm:mx-6 text-gray-800 dark:text-white hover:text-sky-500 transition-all"
           >
             {name}
           </a>

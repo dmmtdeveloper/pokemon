@@ -61,16 +61,26 @@ const { page } = Astro.props;
 <style>
   .btn {
     padding: 0.5rem 1rem;
-    background-color: rgb(82, 82, 226);
+    background-color: rgb(52, 52, 226);
     border-radius: 5px;
     color: white;
     text-decoration: none;
     transition: background-color 0.3s;
+  }
+  
+  .btn:hover{
+    background-color: rgb(82, 82, 226);
+
   }
 
   .disabled {
     background-color: rgb(58, 63, 70);
     cursor: not-allowed;
     color: gray;
+  }
+  
+  .disabled:hover{
+    background-color: rgb(58, 63, 70);
+
   }
 </style>

@@ -14,14 +14,17 @@ const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 <a
   href={`/pokemons/${name}`}
   class:list={[
-    `rounded-3xl border border-gray-700 flex flex-col justify-center items-center py-2  mt-5`,
+    `rounded-3xl border 
+      border-gray-700 flex flex-col 
+      justify-center items-center py-2 mt-5 
+      hover:border-sky-300 transition-all`,
     {
       "border-none": isBig,
     },
   ]}
 >
   <img
-  transition:name={`${name}-image`}
+    transition:name={`${name}-image`}
     class:list={[
       `size-16`,
       {
@@ -43,7 +46,8 @@ const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     ]}>{name}</span
   >
 
-  <p>#
+  <p>
+    #
     {id}
   </p>
 </a>
