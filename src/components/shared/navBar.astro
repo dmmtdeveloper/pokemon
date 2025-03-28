@@ -10,32 +10,30 @@ const currentPath = Astro.url.pathname;
 ---
 
 <!-- component -->
-<nav class="fixed top-0 w-full shadow bg-slate-900 z-10">
-  <div
-    class=" sticky container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300 "
-  >
+<nav
+  class="fixed top-0 w-full shadow bg-slate-900 z-10 items-center flex justify-between px-4 md:px-8 lg:px-16"
+>
+  <a href="/">
+    <img src="/src/assets/logo.png" alt="" class="w-30 h-10" />
+  </a>
+  <div class="flex py-6 text-gray-600 capitalize dark:text-gray-300">
     {
       links.map(({ name, href }) => (
         <div>
-          <a
-            href={href}
-            class="mx-1.5 sm:mx-6 text-gray-800 dark:text-white hover:text-sky-500 transition-all"
-          >
-            {name}
-          </a>
-
           {currentPath === href ? (
-            <div
-              transition:name="menu-line"
-              class="border-b-2 border-blue-500 mx-5"
-            />
+            <a
+              href={href}
+              class="pl-4 md:pl-12  text-sky-500 hover:text-sky-500 transition-all"
+            >
+              {name}
+            </a>
           ) : (
-            <div class="border-b-2 border-transparent" />
+            <a href={href} class="pl-4 md:pl-12   text-white transition-all">
+              {name}
+            </a>
           )}
         </div>
       ))
     }
   </div>
 </nav>
-
-
